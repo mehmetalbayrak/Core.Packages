@@ -40,7 +40,7 @@ public class EfRepositoryBase<TEntity, TEntityId, TContext> : IAsyncRepository<T
         return entities;
     }
 
-    public Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? predicate = null, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
+    public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? predicate = null, bool withDeleted = false, bool enableTracking = true, CancellationToken cancellationToken = default)
     {
         IQueryable<TEntity> queryable = Query();
         if (!enableTracking)
@@ -49,7 +49,7 @@ public class EfRepositoryBase<TEntity, TEntityId, TContext> : IAsyncRepository<T
             queryable = queryable.IgnoreQueryFilters();
         if (predicate != null)
             queryable = queryable.Where(predicate);
-        return queryable.AnyAsync(cancellationToken);
+        return await queryable.AnyAsync(cancellationToken);
     }
 
     public async Task<TEntity> DeleteAsync(TEntity entity, bool permanent = false)
